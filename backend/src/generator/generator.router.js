@@ -1,9 +1,19 @@
 const router = require("express").Router();
 const controller = require("./generator.controller");
-const methodNotAllowed = require('../errors/methodNotAllowed');
+const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+const methodNotAllowed = require("../errors/methodNotAllowed");
 
-router.route('/madlib').post(controller.madLibGenerator).all(methodNotAllowed);
-router.route('/').all(methodNotAllowed); 
+router
+  .route("/generate/madlib")
+  .post((req, res, next) => {
+    console.log(`Received ${req.method} request to ${req.originalUrl}`);
+    next();
+  }, asyncErrorBoundary(controller.getMadLib))
+  .all(methodNotAllowed);
 
-//export router
+router.all("*", (req, res, next) => {
+  console.log(`Received ${req.method} request to ${req.originalUrl}`);
+  res.status(404).json({ error: "Route not found" });
+});
+
 module.exports = router;

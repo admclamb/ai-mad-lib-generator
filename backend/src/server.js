@@ -13,7 +13,7 @@ mongoose
     console.error(error);
   });
 
-app.listen(PORT, linstener);
-function linstener() {
+app.listen(PORT, listener);
+function listener() {
   console.log(`🚀Listening on Port ${PORT}🚀`);
 }
